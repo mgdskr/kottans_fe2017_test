@@ -52,7 +52,7 @@ export default class Filters extends Component {
     this.props.handlerOnFilter(this._filterFunction())
   }
 
-  render ({languages}) {
+  render ({languages}, {lang}) {
     return (
       <div >
         <div>
@@ -109,7 +109,8 @@ export default class Filters extends Component {
                    type="radio"
                    name="lang"
                    value={lang}
-                   onChange={this.handlerOnFilterByLang}/>
+                   onChange={this.handlerOnFilterByLang}
+                   defaultChecked={this.state.lang === lang}/>
           </div>)}
         </div>
       </div>
