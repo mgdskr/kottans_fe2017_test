@@ -2,6 +2,7 @@ import { h, Component } from 'preact'
 import { Router, route } from 'preact-router'
 
 import * as githubApi from '../lib/github-api'
+import initialState from './initialState'
 
 import Header from './header'
 import Home from '../routes/home'
@@ -19,37 +20,7 @@ import * as utils from '../lib/utils'
 // import Profile from 'async!./profile';
 
 export default class App extends Component {
-  state = {
-    data: [],
-    additionalData: {},
-    query: '',
-    languages: [],
-    selectedItemId: null,
-    filterObj: {
-      hasOpenIssues: false,
-      hasTopics: false,
-      starredGTXTimes: 0,
-      updatedAfter: '2000-01-01',
-      type: 'all',
-      lang: 'Any',
-    },
-    filterFunction: item => true,
-    sortingObj: {},
-    sortingFunction: (a,b) => 0,
-    page: 0,
-    allPagesLoaded: false,
-    // updateRoute: false,
-  }
-
-  //TODO destruction in objects
-
-  /** Gets fired when the route changes.
-   *  @param {Object} event    "change" event from [preact-router](http://git.io/preact-router)
-   *  @param {string} event.url  The newly routed URL
-   */
-  // handleRoute = e => {
-  //   this.currentUrl = e.url
-  // }
+  state = initialState
 
   handleRoute = e => {
     return
@@ -98,12 +69,12 @@ export default class App extends Component {
       if (isFilter) {
         const filterObj = {
           hasOpenIssues: matches.hasOwnProperty('has_open_issues'),
+          has_topics: matches.hasOwnProperty('has_topics'),
           starredGTXTimes: matches.hasOwnProperty('starred_gt') ? starred_gt : 0,
           updatedAfter: (updated_after && updated_after.replace(/_/, '-')) ||
           '2000-01-01',
           type: type || 'all',
           lang: language || 'Any',
-          has_topics: matches.hasOwnProperty('has_topics')
         }
 
         updateFilter = JSON.stringify(filterObj) !== JSON.stringify(this.state.filterObj)
@@ -118,7 +89,7 @@ export default class App extends Component {
 
       if (updateSorting || updateFilter) {
         this.setState(Object.assign({}, setSorting, setFilter,
-          // {updateRoute: false}
+          {updateRoute: false}
           ))
       }
     }
@@ -129,23 +100,17 @@ export default class App extends Component {
   }
 
   componentDidUpdate() {
-    const {query, sortingObj, filterObj
-    //   // , updateRoute
-    } = this.state
+    const {query, sortingObj, filterObj, updateRoute} = this.state
     const newRoute =  utils.getFullRoute(query, sortingObj, filterObj)
-    // if (newRoute !== this.currentRoute
-    //   // && updateRoute
-    // ) {
-    //   this.currentRoute = newRoute
-    //   history.pushState({filterObj: this.state.filterObj, sortingObj: this.state.sortingObj}, 'Mini github client', newRoute)
-    //   console.log(history)
-    // }
-    route(newRoute)
+    if (newRoute !== this.currentRoute && updateRoute) {
+      this.currentRoute = newRoute
+      history.pushState({filterObj: this.state.filterObj, sortingObj: this.state.sortingObj}, 'Mini github client', newRoute)
+    }
   }
 
   componentDidMount() {
     window.addEventListener('popstate', e => {
-      console.log('event', e)
+      this.setState({...e.state, updateRoute: false})
     })
   }
 
@@ -157,8 +122,6 @@ export default class App extends Component {
     languages,
     selectedItemId,
     languagesList,
-    filterFunction,
-    sortingFunction,
     query,
     filterObj,
     sortingObj,
@@ -166,8 +129,11 @@ export default class App extends Component {
 
     console.log('render app', this.state)
 
+    const filterFunction = utils.filterFunction(filterObj)
+    const sortingFunction= utils.sortingFunction(sortingObj)
     const filteredAndSortedData = data.filter(filterFunction).sort(sortingFunction)
     const selectedItem = selectedItemId && additionalData[selectedItemId]
+
     console.log('filtered data', filterFunction)
     console.log('filtered data', filteredAndSortedData)
 
@@ -234,22 +200,24 @@ export default class App extends Component {
 
   handlerOnSearch = query => {
     const page = 1
-    githubApi.searchRepositories(query, page).then(data => {
-      const languages = data.reduce((acc, item) => {
-        if (item.language === null || acc.includes(item.language)) {return acc}
-        return acc.concat(item.language)
-      }, [])
+    githubApi.searchRepositories(query, page)
+      .then(data => {
+        const languages = data.reduce((acc, item) => {
+          if (item.language === null || acc.includes(item.language)) {return acc}
+          return acc.concat(item.language)
+        }, [])
 
-      this.setState({
-        query,
-        data: data,
-        languages: ['Any', ...languages],
-        filterFunction: item => true,
-        //TODO set filterObj, sortingObj, sortingFunctin to default values
-        page,
-        allPagesLoaded: data.length < 30,
-      })
-    }).catch(err => console.log(err))
+        this.setState({
+          ...initialState,
+          ...{
+            query,
+            data: data,
+            languages: ['Any', ...languages],
+            page,
+            allPagesLoaded: data.length < 30,
+          }})
+        })
+      .catch(err => console.log(err))
   }
 
   handleLoadMore = () => {
@@ -271,11 +239,9 @@ export default class App extends Component {
   }
 
   handlerOnFilter = filterObj => {
-    console.log(filterObj)
     this.setState({
-      filterFunction: utils.filterFunction(filterObj),
       filterObj,
-      // updateRoute: true,
+      updateRoute: true,
     })
   }
 
@@ -286,9 +252,8 @@ export default class App extends Component {
     }
     const oppositeSortingOrder = sortingObj.sortingOrder === 'asc' ? 'desc' : 'asc'
     this.setState({
-      sortingFunction: utils.sortingFunction(sortingObj), 
       sortingObj: {...sortingObj, sortingOrder: oppositeSortingOrder},
-      // updateRoute: true,
+      updateRoute: true,
     })
   }
 
