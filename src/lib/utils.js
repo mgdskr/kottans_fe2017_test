@@ -40,7 +40,7 @@ const getFilterRoute = ({hasOpenIssues, hasTopics, starredGTXTimes, updatedAfter
   if (starredGTXTimes) {route += '&starred_gt=' + starredGTXTimes}
   if (updatedAfter > '2000-01-01') {route += '&updated_after=' + updatedAfter.slice(0,10).replace(/-/g, '_')}
   if (type !== 'all') {route += '&type=' + type.toLowerCase()}
-  if (lang !== 'any') {route += '&language=' + lang.toLowerCase()}
+  if (lang !== 'Any') {route += '&language=' + lang.toLowerCase()}
 
   return route
 }

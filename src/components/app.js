@@ -27,18 +27,18 @@ export default class App extends Component {
     selectedItemId: null,
     filterObj: {
       hasOpenIssues: false,
+      hasTopics: false,
       starredGTXTimes: 0,
       updatedAfter: '2000-01-01',
       type: 'all',
-      lang: 'any',
-      topics: []
+      lang: 'Any',
     },
     filterFunction: item => true,
     sortingObj: {},
     sortingFunction: (a,b) => 0,
     page: 0,
     allPagesLoaded: false,
-    updateRoute: false,
+    // updateRoute: false,
   }
 
   //TODO destruction in objects
@@ -52,6 +52,7 @@ export default class App extends Component {
   // }
 
   handleRoute = e => {
+    return
     // if (e.url !== this.state.query) {
     //   this.handlerOnSearch(e.url.replace('/\//', ''))
     // }
@@ -101,7 +102,7 @@ export default class App extends Component {
           updatedAfter: (updated_after && updated_after.replace(/_/, '-')) ||
           '2000-01-01',
           type: type || 'all',
-          lang: language || 'any',
+          lang: language || 'Any',
           has_topics: matches.hasOwnProperty('has_topics')
         }
 
@@ -116,7 +117,9 @@ export default class App extends Component {
       }
 
       if (updateSorting || updateFilter) {
-        this.setState(Object.assign({}, setSorting, setFilter, {updateRoute: false}))
+        this.setState(Object.assign({}, setSorting, setFilter,
+          // {updateRoute: false}
+          ))
       }
     }
   }
@@ -126,13 +129,18 @@ export default class App extends Component {
   }
 
   componentDidUpdate() {
-    const {query, sortingObj, filterObj, updateRoute} = this.state
+    const {query, sortingObj, filterObj
+    //   // , updateRoute
+    } = this.state
     const newRoute =  utils.getFullRoute(query, sortingObj, filterObj)
-    if (newRoute !== this.currentRoute && updateRoute) {
-      this.currentRoute = newRoute
-      history.pushState({filterObj: this.state.filterObj, sortingObj: this.state.sortingObj}, 'Mini github client', newRoute)
-      console.log(history)
-    }
+    // if (newRoute !== this.currentRoute
+    //   // && updateRoute
+    // ) {
+    //   this.currentRoute = newRoute
+    //   history.pushState({filterObj: this.state.filterObj, sortingObj: this.state.sortingObj}, 'Mini github client', newRoute)
+    //   console.log(history)
+    // }
+    route(newRoute)
   }
 
   componentDidMount() {
@@ -156,11 +164,12 @@ export default class App extends Component {
     sortingObj,
     }) {
 
-    console.log('render app', filterFunction)
+    console.log('render app', this.state)
 
     const filteredAndSortedData = data.filter(filterFunction).sort(sortingFunction)
     const selectedItem = selectedItemId && additionalData[selectedItemId]
-    console.log('selectedItem', selectedItem)
+    console.log('filtered data', filterFunction)
+    console.log('filtered data', filteredAndSortedData)
 
 
     return (
@@ -262,10 +271,11 @@ export default class App extends Component {
   }
 
   handlerOnFilter = filterObj => {
+    console.log(filterObj)
     this.setState({
       filterFunction: utils.filterFunction(filterObj),
       filterObj,
-      updateRoute: true,
+      // updateRoute: true,
     })
   }
 
@@ -278,7 +288,7 @@ export default class App extends Component {
     this.setState({
       sortingFunction: utils.sortingFunction(sortingObj), 
       sortingObj: {...sortingObj, sortingOrder: oppositeSortingOrder},
-      updateRoute: true,
+      // updateRoute: true,
     })
   }
 

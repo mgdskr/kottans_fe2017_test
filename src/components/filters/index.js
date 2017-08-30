@@ -85,12 +85,10 @@ export default class Filters extends Component {
                    name="lang"
                    value={language}
                    onChange={this.handlerOnFilterBy}
-                   defaultChecked={language.toLowerCase() === filterObj.lang}/>
+                   defaultChecked={language === filterObj.lang}/>
           </div>)}
         </div>
       </div>
     )
   }
 }
-
-// TODO has topics
