@@ -23,77 +23,51 @@ export default class App extends Component {
   state = initialState
 
   handleRoute = e => {
-    return
-    // if (e.url !== this.state.query) {
-    //   this.handlerOnSearch(e.url.replace('/\//', ''))
-    // }
-
-    // console.log('e', e.current.attributes.matches)
-
-    const {query, sortingObj, filterObj} = this.state
-    // const fullRoute = utils.getFullRoute(query, sortingObj, filterObj)
-    // const routeChanged = fullRoute !== e.url.replace(/\//, '')
-    console.log('currentRoute', this.currentRoute)
-    const routeChanged = this.currentRoute !== e.url.replace(/\//, '')
-
-    if (routeChanged) {
+    if (!this.state.query && e.url !== '/') {
       const matches = e.current.attributes.matches
       const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics} = matches
 
-      let setSorting = {}
-      let setFilter = {}
-
-      let updateSorting = false
-
-      if (sort) {
-        const sortingObj = {
-          sortingField: sort,
-          sortingOrder: order,
-        }
-        updateSorting = JSON.stringify(sortingObj) !== JSON.stringify(this.state.sortingObj)
-
-        setSorting = updateSorting
-          ? {
-            sortingObj,
-            sortingFunction: utils.sortingFunction(sortingObj),
-          }
-          : {}
+      const sortingObj = {
+        sortingField: sort,
+        sortingOrder: order,
       }
 
-      let updateFilter = false
-
-      console.log('matches', has_open_issues, starred_gt,  updated_after, type, language, has_topics)
-
-      const isFilter = matches.hasOwnProperty('has_open_issues') || matches.hasOwnProperty('starred_gt') || updated_after || type ||
-        language || matches.hasOwnProperty('has_topics')
-      if (isFilter) {
-        const filterObj = {
-          hasOpenIssues: matches.hasOwnProperty('has_open_issues'),
-          has_topics: matches.hasOwnProperty('has_topics'),
-          starredGTXTimes: matches.hasOwnProperty('starred_gt') ? starred_gt : 0,
-          updatedAfter: (updated_after && updated_after.replace(/_/, '-')) ||
-          '2000-01-01',
-          type: type || 'all',
-          lang: language || 'Any',
-        }
-
-        updateFilter = JSON.stringify(filterObj) !== JSON.stringify(this.state.filterObj)
-
-        setFilter = updateFilter
-          ? {
-            filterObj,
-            filterFunction: utils.filterFunction(filterObj),
-          }
-          : {}
+      const filterObj = {
+            hasOpenIssues: matches.hasOwnProperty('has_open_issues'),
+            has_topics: matches.hasOwnProperty('has_topics'),
+            starredGTXTimes: matches.hasOwnProperty('starred_gt') ? starred_gt : 0,
+            updatedAfter: (updated_after && updated_after.replace(/_/, '-')) ||
+            '2000-01-01',
+            type: type || 'all',
+            lang: language || 'Any',
       }
 
-      if (updateSorting || updateFilter) {
-        this.setState(Object.assign({}, setSorting, setFilter,
-          {updateRoute: false}
-          ))
-      }
+      const page = 1
+
+      githubApi.searchRepositories(user, page)
+        .then(data => {
+          const languages = data.reduce((acc, item) => {
+            if (item.language === null || acc.includes(item.language)) {return acc}
+            return acc.concat(item.language)
+          }, [])
+
+          this.setState({
+            ...initialState,
+            ...{
+              query: user,
+              data: data,
+              languages: ['Any', ...languages],
+              page,
+              allPagesLoaded: data.length < 30,
+              filterObj,
+              sortingObj,
+              updateRoute: true
+            }})
+        })
+        .catch(err => console.log(err))
     }
   }
+
 
   componentWillUpdate() {
     console.log('componentWillUpdate')
