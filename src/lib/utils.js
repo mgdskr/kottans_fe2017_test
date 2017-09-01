@@ -58,7 +58,7 @@ const getFullRoute = (query, sortingObj, filterObj) => {
   fullRoute += sortingRoute ? sortingRoute : ''
   fullRoute += filterRoute ? filterRoute : ''
 
-  return fullRoute.replace(/\?\&/,'?')
+  return fullRoute.replace(/\?&/,'?')
 }
 
 export { sortingFunction, filterFunction, getFilterRoute, getSortingRoute, getFullRoute }

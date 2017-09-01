@@ -78,15 +78,18 @@ export default class Filters extends Component {
         </div>
         <div>
           Language
-          {languages.map(language => <div key={language}>
-            <label htmlFor={language}>{language}</label>
-            <input id={language}
-                   type="radio"
-                   name="lang"
-                   value={language}
-                   onChange={this.handlerOnFilterBy}
-                   defaultChecked={language === filterObj.lang}/>
-          </div>)}
+          {languages.map(language => {
+            console.log(language, filterObj.lang, language === filterObj.lang)
+            return (<div key={language}>
+              <label htmlFor={language}>{language}</label>
+              <input id={language}
+                     type="radio"
+                     name="lang"
+                     value={language}
+                     onChange={this.handlerOnFilterBy}
+                     defaultChecked={language === filterObj.lang}/>
+            </div>)
+          })}
         </div>
       </div>
     )

@@ -23,6 +23,7 @@ export default class App extends Component {
   state = initialState
 
   handleRoute = e => {
+    console.log('handleRoute')
     if (!this.state.query && e.url !== '/') {
       const matches = e.current.attributes.matches
       const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics} = matches
@@ -34,9 +35,9 @@ export default class App extends Component {
 
       const filterObj = {
             hasOpenIssues: matches.hasOwnProperty('has_open_issues'),
-            has_topics: matches.hasOwnProperty('has_topics'),
+            hasTopics: matches.hasOwnProperty('has_topics'),
             starredGTXTimes: matches.hasOwnProperty('starred_gt') ? starred_gt : 0,
-            updatedAfter: (updated_after && updated_after.replace(/_/, '-')) ||
+            updatedAfter: (updated_after && updated_after.replace(/_/g, '-')) ||
             '2000-01-01',
             type: type || 'all',
             lang: language || 'Any',
@@ -51,18 +52,18 @@ export default class App extends Component {
             return acc.concat(item.language)
           }, [])
 
+          history.replaceState({filterObj, sortingObj,}, 'Mini github client', e.url)
+
           this.setState({
             ...initialState,
-            ...{
               query: user,
               data: data,
               languages: ['Any', ...languages],
               page,
               allPagesLoaded: data.length < 30,
               filterObj,
-              sortingObj,
-              updateRoute: true
-            }})
+              sortingObj
+            })
         })
         .catch(err => console.log(err))
     }
@@ -77,8 +78,9 @@ export default class App extends Component {
     const {query, sortingObj, filterObj, updateRoute} = this.state
     const newRoute =  utils.getFullRoute(query, sortingObj, filterObj)
     if (newRoute !== this.currentRoute && updateRoute) {
+      console.log('pushing new route')
       this.currentRoute = newRoute
-      history.pushState({filterObj: this.state.filterObj, sortingObj: this.state.sortingObj}, 'Mini github client', newRoute)
+      history.pushState({filterObj, sortingObj,}, 'Mini github client', newRoute)
     }
   }
 
@@ -99,6 +101,7 @@ export default class App extends Component {
     query,
     filterObj,
     sortingObj,
+    allPagesLoaded,
     }) {
 
     console.log('render app', this.state)
@@ -106,6 +109,9 @@ export default class App extends Component {
     const filterFunction = utils.filterFunction(filterObj)
     const sortingFunction= utils.sortingFunction(sortingObj)
     const filteredAndSortedData = data.filter(filterFunction).sort(sortingFunction)
+    if (filteredAndSortedData.length < 10 && !allPagesLoaded) {
+      this.handlerLoadMore()
+    }
     const selectedItem = selectedItemId && additionalData[selectedItemId]
 
     console.log('filtered data', filterFunction)
@@ -127,7 +133,7 @@ export default class App extends Component {
                    handlerOnOpenDialog={this.handlerOnOpenDialog}/>
         <Dialog dialogItem={selectedItem}/>
 
-        {data.length === 0 || data.length % 30 ? null : <button onClick={this.handleLoadMore}>Load more</button>}
+        {data.length === 0 || data.length % 30 ? null : <button onClick={this.handlerLoadMore}>Load more</button>}
 
         <Header />
       </div>
@@ -173,6 +179,7 @@ export default class App extends Component {
   }
 
   handlerOnSearch = query => {
+    console.log('searching new data')
     const page = 1
     githubApi.searchRepositories(query, page)
       .then(data => {
@@ -189,12 +196,13 @@ export default class App extends Component {
             languages: ['Any', ...languages],
             page,
             allPagesLoaded: data.length < 30,
+            updateRoute: true,
           }})
         })
       .catch(err => console.log(err))
   }
 
-  handleLoadMore = () => {
+  handlerLoadMore = () => {
     const page = this.state.page + 1
 
     githubApi.searchRepositories(this.state.query, page).then(data => {
@@ -205,7 +213,7 @@ export default class App extends Component {
 
       this.setState({
         data: [...this.state.data, ...data],
-        languages: ['Any', ...languages],
+        languages: Array.from(new Set([...this.state.languages, ...languages])),
         page,
         allPagesLoaded: data.length < 30,
       })
@@ -232,3 +240,6 @@ export default class App extends Component {
   }
 
 }
+
+// TODO add pagination to URL
+// TODO add error handling if there are no user
