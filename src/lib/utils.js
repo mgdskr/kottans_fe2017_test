@@ -1,17 +1,18 @@
-const sortingFunction = ({sortingField, sortingOrder}) => (a, b) => {
-  const sortingAlg = (x, y) => {
-    if (typeof x === 'string' || typeof y === 'string') {
-      x = x.toLowerCase()
-      y = y.toLowerCase()
-    }
-    if (x < y) {
-      return -1
-    } else if (x > y) {
-      return 1
-    } else {
-      return 0
-    }
+const sortingAlg = (x, y) => {
+  if (typeof x === 'string' || typeof y === 'string') {
+    x = x.toLowerCase()
+    y = y.toLowerCase()
   }
+  if (x < y) {
+    return -1
+  } else if (x > y) {
+    return 1
+  } else {
+    return 0
+  }
+}
+
+const sortingFunction = ({sortingField, sortingOrder = 'asc'}) => (a, b) => {
   return sortingOrder === 'asc'
     ? sortingAlg(a[sortingField], b[sortingField])
     : sortingAlg(b[sortingField], a[sortingField])
@@ -61,4 +62,4 @@ const getFullRoute = (query, sortingObj, filterObj) => {
   return fullRoute.replace(/\?&/,'?')
 }
 
-export { sortingFunction, filterFunction, getFilterRoute, getSortingRoute, getFullRoute }
+export { sortingFunction, filterFunction, getFilterRoute, getSortingRoute, getFullRoute, sortingAlg }

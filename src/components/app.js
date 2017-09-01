@@ -28,6 +28,10 @@ export default class App extends Component {
       const matches = e.current.attributes.matches
       const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics} = matches
 
+    console.log(`%c matches `, 'color: red; font-size: 19px', matches)
+    console.log('user', user)
+
+
       const sortingObj = {
         sortingField: sort,
         sortingOrder: order,
@@ -50,7 +54,7 @@ export default class App extends Component {
           const languages = data.reduce((acc, item) => {
             if (item.language === null || acc.includes(item.language)) {return acc}
             return acc.concat(item.language)
-          }, [])
+          }, []).sort(utils.sortingAlg)
 
           history.replaceState({filterObj, sortingObj,}, 'Mini github client', e.url)
 
@@ -109,7 +113,7 @@ export default class App extends Component {
     const filterFunction = utils.filterFunction(filterObj)
     const sortingFunction= utils.sortingFunction(sortingObj)
     const filteredAndSortedData = data.filter(filterFunction).sort(sortingFunction)
-    if (filteredAndSortedData.length < 10 && !allPagesLoaded) {
+    if (data.length > 0 && filteredAndSortedData.length < 10 && !allPagesLoaded) {
       this.handlerLoadMore()
     }
     const selectedItem = selectedItemId && additionalData[selectedItemId]
@@ -183,10 +187,14 @@ export default class App extends Component {
     const page = 1
     githubApi.searchRepositories(query, page)
       .then(data => {
-        const languages = data.reduce((acc, item) => {
-          if (item.language === null || acc.includes(item.language)) {return acc}
-          return acc.concat(item.language)
-        }, [])
+        const languages = data
+          .reduce((acc, item) => {
+            if (item.language === null || acc.includes(item.language)) {return acc}
+            return acc.concat(item.language)
+            }, [])
+          .sort(utils.sortingAlg)
+
+        console.log(languages)
 
         this.setState({
           ...initialState,
@@ -213,7 +221,7 @@ export default class App extends Component {
 
       this.setState({
         data: [...this.state.data, ...data],
-        languages: Array.from(new Set([...this.state.languages, ...languages])),
+        languages: ['Any', ...Array.from(new Set([...this.state.languages.slice(1), ...languages])).sort(utils.sortingAlg)],
         page,
         allPagesLoaded: data.length < 30,
       })
