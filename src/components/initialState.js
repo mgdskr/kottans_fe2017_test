@@ -12,7 +12,10 @@ const initialState = {
     type: 'all',
     lang: 'Any',
   },
-  sortingObj: {},
+  sortingObj: {
+    sortingField: null,
+    sortingOrder: null,
+  },
   page: 0,
   allPagesLoaded: false,
   updateRoute: false,

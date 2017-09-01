@@ -123,17 +123,28 @@ export default class App extends Component {
         <Router onChange={this.handleRoute}>
           <Search path="/:user?" handlerOnSearch={this.handlerOnSearch}/>
         </Router>
-        <Filters filterObj={filterObj}
-                 languages={languages}
-                 handlerOnFilter={this.handlerOnFilter}/>
-        <Sorting sortingObj={sortingObj}
-                 handlerOnSort={this.handlerOnSort}
-                 sorting={sorting}/>
-        <ReposList data={filteredAndSortedData}
-                   handlerOnOpenDialog={this.handlerOnOpenDialog}/>
-        <Dialog dialogItem={selectedItem}/>
+        <Main/>
+        { data.length &&
+          <div>
+            <Filters filterObj={filterObj}
+                     languages={languages}
+                     handlerOnFilter={this.handlerOnFilter}/>
+            <Sorting sortingObj={sortingObj}
+                     handlerOnSort={this.handlerOnSort}
+                     sorting={sorting}/>
+            <ReposList data={filteredAndSortedData}
+                       handlerOnOpenDialog={this.handlerOnOpenDialog}/>
+          </div>
+        }
 
-        {data.length === 0 || data.length % 30 ? null : <button onClick={this.handlerLoadMore}>Load more</button>}
+        { selectedItem &&
+          <Dialog dialogItem={selectedItem}/>
+        }
+
+        { data.length === 0 || data.length % 30
+          ? null
+          : <button onClick={this.handlerLoadMore}>Load more</button>
+        }
 
         <Header />
       </div>
@@ -232,14 +243,9 @@ export default class App extends Component {
     })
   }
 
-  handlerOnSort = sortingField => {
-    const sortingObj = {
-      sortingField,
-      sortingOrder: this.state.sortingObj.sortingOrder || 'asc'
-    }
-    const oppositeSortingOrder = sortingObj.sortingOrder === 'asc' ? 'desc' : 'asc'
+  handlerOnSort = sortingObj => {
     this.setState({
-      sortingObj: {...sortingObj, sortingOrder: oppositeSortingOrder},
+      sortingObj,
       updateRoute: true,
     })
   }
