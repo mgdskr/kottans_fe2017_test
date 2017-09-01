@@ -26,11 +26,7 @@ export default class App extends Component {
     console.log('handleRoute')
     if (!this.state.query && e.url !== '/') {
       const matches = e.current.attributes.matches
-      const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics} = matches
-
-    console.log(`%c matches `, 'color: red; font-size: 19px', matches)
-    console.log('user', user)
-
+      const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics } = matches
 
       const sortingObj = {
         sortingField: sort,
@@ -48,7 +44,6 @@ export default class App extends Component {
       }
 
       const page = 1
-
       githubApi.searchRepositories(user, page)
         .then(data => {
           const languages = data.reduce((acc, item) => {
@@ -56,15 +51,16 @@ export default class App extends Component {
             return acc.concat(item.language)
           }, []).sort(utils.sortingAlg)
 
-          history.replaceState({filterObj, sortingObj,}, 'Mini github client', e.url)
+          const URLWithoutPage = e.url.replace(/.page=\d+/g,'')
+          history.replaceState({filterObj, sortingObj,}, 'Mini github client', URLWithoutPage)
 
           this.setState({
             ...initialState,
               query: user,
               data: data,
               languages: ['Any', ...languages],
-              page,
               allPagesLoaded: data.length < 30,
+              page,
               filterObj,
               sortingObj
             })
@@ -79,8 +75,8 @@ export default class App extends Component {
   }
 
   componentDidUpdate() {
-    const {query, sortingObj, filterObj, updateRoute} = this.state
-    const newRoute =  utils.getFullRoute(query, sortingObj, filterObj)
+    const {query, sortingObj, filterObj, updateRoute, page} = this.state
+    const newRoute =  utils.getFullRoute(query, sortingObj, filterObj, page)
     if (newRoute !== this.currentRoute && updateRoute) {
       console.log('pushing new route')
       this.currentRoute = newRoute
@@ -224,6 +220,7 @@ export default class App extends Component {
         languages: ['Any', ...Array.from(new Set([...this.state.languages.slice(1), ...languages])).sort(utils.sortingAlg)],
         page,
         allPagesLoaded: data.length < 30,
+        updateRoute: true,
       })
     }).catch(err => console.log(err))
   }

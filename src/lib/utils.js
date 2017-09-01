@@ -50,14 +50,15 @@ const getSortingRoute = ({sortingField, sortingOrder}) => {
   return sortingField ? 'sort=' + sortingField + '&order=' + sortingOrder : ''
 }
 
-const getFullRoute = (query, sortingObj, filterObj) => {
+const getFullRoute = (query, sortingObj, filterObj, page) => {
   const sortingRoute = getSortingRoute(sortingObj)
   const filterRoute = getFilterRoute(filterObj)
 
   let fullRoute  = query
-  fullRoute += sortingRoute || filterRoute ? '?' : ''
+  fullRoute += sortingRoute || filterRoute || page > 1 ? '?' : ''
   fullRoute += sortingRoute ? sortingRoute : ''
   fullRoute += filterRoute ? filterRoute : ''
+  fullRoute += page > 1 ? `&page=${page}` : ''
 
   return fullRoute.replace(/\?&/,'?')
 }
