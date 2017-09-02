@@ -3,8 +3,6 @@ import style from './style'
 
 export default class Filters extends Component {
 
-  //TODO if user is changed lang has to be set to 'Any'
-
   handlerOnFilterBy = event => {
     const t = event.target
     const $inputId = t.id
@@ -19,10 +17,10 @@ export default class Filters extends Component {
       filterObj.starredGTXTimes = t.value
     } else if ($inputId === 'updatedAfter') {
       filterObj.updatedAfter = t.value
-    } else if ($inputName === 'type') {
-      filterObj.type = t.value.toLowerCase()
-    } else if ($inputId === 'language') {
+    } else if ($inputId === 'type') {
       console.log('!!!!!!')
+      filterObj.type = [].find.call(t.childNodes, option => option.selected).value.toLowerCase()
+    } else if ($inputId === 'language') {
       filterObj.lang = [].find.call(t.childNodes, option => option.selected).value
     }
 
@@ -65,21 +63,19 @@ export default class Filters extends Component {
         </div>
         <div>
           Type
-          {['All', 'Fork', 'Source'].map(type =>
-            <div>
-              <label htmlFor={type}>{type}</label>
-              <input id={type}
-                     type="radio"
-                     name="type"
-                     value={type}
-                     checked={type.toLowerCase() === filterObj.type}
-                     onChange={this.handlerOnFilterBy}/>
-            </div>
-          )}
+          <select id="type" size="1"onChange={this.handlerOnFilterBy}>
+            {['All', 'Fork', 'Source'].map(type =>
+                <option value={type}
+                        selected={type.toLowerCase() === filterObj.type}>
+                  {type}
+                </option>
+              )
+            }
+          </select>
         </div>
         <div>
           Languages
-          <select id="language" size="1" name="sorting" onChange={this.handlerOnFilterBy}>
+          <select id="language" size="1" onChange={this.handlerOnFilterBy}>
             {languages.map(language =>
                 <option value={language}
                         selected={language === filterObj.lang}>

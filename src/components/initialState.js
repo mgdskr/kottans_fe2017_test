@@ -13,12 +13,12 @@ const initialState = {
     lang: 'Any',
   },
   sortingObj: {
-    sortingField: null,
-    sortingOrder: null,
+    sortingField: 'full_name',
+    sortingOrder: 'asc',
   },
   page: 0,
   allPagesLoaded: false,
-  updateRoute: false,
+  updateRoute: true,
 }
 
 export default initialState
