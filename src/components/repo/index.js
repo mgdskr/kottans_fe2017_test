@@ -5,7 +5,6 @@ import languageColors from './language-colors'
 export default class Repo extends Component {
 
   handlerOnOpenDialog = itemId => event => {
-    console.log(itemId)
     this.props.handlerOnOpenDialog(itemId)
   }
 
@@ -15,8 +14,6 @@ export default class Repo extends Component {
         ? languageColors[item.language].color
         : '#586069'
     }
-
-    console.log(item.language, languageColors[item.language], languageColors[item.language] ? languageColors[item.language].color : 'not found')
 
     return(
       <div class={style.repo}

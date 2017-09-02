@@ -4,8 +4,8 @@ import { sortingOptions } from './sorting'
 
 export default class Sorting extends Component {
 
-  handlerOnSort = sortingType => () => {
-    console.log('handlerOnSort', sortingType)
+  handlerOnSort = event => {
+    const sortingType = [].find.call(event.target.childNodes, option => option.selected).value
     const sortingObj = sortingOptions[sortingType]
     this.props.handlerOnSort(sortingObj)
   }
@@ -15,25 +15,17 @@ export default class Sorting extends Component {
     return (
       <div>
         Sort options
-        <ul>
+        <select size="1" name="sorting" onChange={this.handlerOnSort}>
           {Object.keys(sortingOptions).
             map(key =>
-              <li>
-              <label htmlFor={key}>{sortingOptions[key].title}</label>
-              <input type="radio"
-                     id={key}
-                     name="sorting"
-                     value={key}
-                     checked={sortingOptions[key].sortingField === sortingObj.sortingField &&
-                              sortingOptions[key].sortingOrder === sortingObj.sortingOrder}
-                     onChange={this.handlerOnSort(key)}/>
-
-              </li>
+              <option value={key}
+                      selected={sortingOptions[key].sortingField === sortingObj.sortingField &&
+                                sortingOptions[key].sortingOrder === sortingObj.sortingOrder}>
+                {sortingOptions[key].title}
+              </option>
             )
           }
-        </ul>
-
-
+        </select>
       </div>
     )
   }

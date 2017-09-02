@@ -21,12 +21,14 @@ export default class Filters extends Component {
       filterObj.updatedAfter = t.value
     } else if ($inputName === 'type') {
       filterObj.type = t.value.toLowerCase()
-    } else if ($inputName === 'lang') {
-      filterObj.lang = t.value
+    } else if ($inputId === 'language') {
+      console.log('!!!!!!')
+      filterObj.lang = [].find.call(t.childNodes, option => option.selected).value
     }
 
     this.props.handlerOnFilter(filterObj)
   }
+
 
   render ({filterObj ,languages}) {
     return (
@@ -76,18 +78,16 @@ export default class Filters extends Component {
           )}
         </div>
         <div>
-          Language
-          {languages.map(language => {
-            return (<div key={language}>
-              <label htmlFor={language}>{language}</label>
-              <input id={language}
-                     type="radio"
-                     name="lang"
-                     value={language}
-                     onChange={this.handlerOnFilterBy}
-                     checked={language === filterObj.lang}/>
-            </div>)
-          })}
+          Languages
+          <select id="language" size="1" name="sorting" onChange={this.handlerOnFilterBy}>
+            {languages.map(language =>
+                <option value={language}
+                        selected={language === filterObj.lang}>
+                  {language}
+                </option>
+              )
+            }
+          </select>
         </div>
       </div>
     )
