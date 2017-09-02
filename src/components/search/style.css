@@ -1,0 +1,70 @@
+header {
+    background-color: #24292e;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+h1 {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.innerContainer {
+    width: 960px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type="search"] {
+    width: 300px;
+    height: 30px;
+    font-size: 13px;
+    padding-left: 8px;
+    padding-right: 8px;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: none;
+    border-radius: 3px;
+    color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(255, 255, 255, 0.125);
+    margin-right: 10px;
+}
+
+input[type="search"]:hover, input[type="search"]:focus {
+    outline: none;
+    border: none;
+}
+
+button[type="submit"] {
+    color: #24292e;
+    background-color: #eff3f6;
+    background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
+    border: 1px solid rgba(27, 31, 35, 0.2);
+    border-radius: 3px;
+    white-space: nowrap;
+    cursor: pointer;
+    height: 30px;
+    vertical-align: middle;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+button[type="submit"]:hover {
+    color: #24292e;
+    background-color: #e6ebf1;
+    background-image: linear-gradient(-180deg, #f0f3f6 0%, #e6ebf1 90%);
+    border: 1px solid rgba(27, 31, 35, 0.2);
+}
+

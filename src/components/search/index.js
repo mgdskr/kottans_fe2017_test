@@ -13,12 +13,16 @@ export default class Search extends Component {
 
   render () {
     return (
-      <div>
-        <form action="" onSubmit={this.handlerOnSearch}>
-          <input id="searchInput" type="search" placeholder="Search for github repo here..."/>
-          <button type="submit">Search</button>
-        </form>
-      </div>
+      <header>
+        <div class={style.innerContainer}>
+          <h1>Mini github client</h1>
+          <form action="" onSubmit={this.handlerOnSearch}>
+            <input id="searchInput" type="search"
+                   placeholder="Search GitHub"/>
+            <button type="submit">Search</button>
+          </form>
+        </div>
+      </header>
     )
   }
 }

@@ -1,0 +1,43 @@
+h2 {
+    color: #0366d6;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 0px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    color: #586069;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.repo {
+    border-bottom: 1px #e1e4e8 solid;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.repoForked, .repoStars, .repoUpdatedAt, .repoLanguage {
+    color: #586069;
+    font-size: 12px;
+    margin-right: 16px;
+}
+
+.repoLanguageIcon {
+    position: relative;
+    top: 1px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: red;
+    content: '';
+    display: inline-block;
+    margin-right: 3px;
+}
+
+.repoStarsIcon {
+    position: relative;
+    top: 1px;
+    margin-right: 3px;
+}

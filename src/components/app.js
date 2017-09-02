@@ -11,6 +11,7 @@ import Sorting from './sorting'
 import Dialog from './dialog'
 import * as utils from '../lib/utils'
 
+import style from './style.css'
 
 export default class App extends Component {
   state = {...initialState}
@@ -211,37 +212,40 @@ export default class App extends Component {
 
     return (
       <div id="app">
-        { query && data.length
-          ? <h1>{query}</h1>
-          : null
-        }
-        { query && !data.length &&
-        <h1>{`No user with name ${query} is found`}</h1>
-        }
         <Router onChange={this.handleRoute}>
           <Search path="/:user?" handlerOnSearch={this.handlerOnSearch}/>
         </Router>
-        { data.length
-          ? <div>
-            <Filters filterObj={filterObj}
-                     languages={languages}
-                     handlerOnFilter={this.handlerOnFilter}/>
-            <Sorting sortingObj={sortingObj}
-                     handlerOnSort={this.handlerOnSort}
-                     sorting={sorting}/>
-            <ReposList data={filteredAndSortedData}
-                       handlerOnOpenDialog={this.handlerOnOpenDialog}/>
-          </div>
-          : null
-        }
+        <main>
+          { query && data.length
+              ? <h1>{query}</h1>
+              : null
+          }
+
+          { query && !data.length &&
+              <h1>{`No user with name ${query} is found`}</h1>
+          }
+
+          { data.length
+            ? <div>
+                <Filters filterObj={filterObj}
+                         languages={languages}
+                         handlerOnFilter={this.handlerOnFilter}/>
+                <Sorting sortingObj={sortingObj}
+                         handlerOnSort={this.handlerOnSort}
+                         sorting={sorting}/>
+                <ReposList data={filteredAndSortedData}
+                           handlerOnOpenDialog={this.handlerOnOpenDialog}/>
+                { data.length === 0 || data.length % 30
+                  ? null
+                  : <button onClick={this.handlerLoadMore}>Load more</button>
+                }
+              </div>
+            : null
+          }
+        </main>
 
         { selectedItem &&
         <Dialog dialogItem={selectedItem}/>
-        }
-
-        { data.length === 0 || data.length % 30
-          ? null
-          : <button onClick={this.handlerLoadMore}>Load more</button>
         }
 
       </div>
