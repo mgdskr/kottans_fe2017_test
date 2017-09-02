@@ -4,29 +4,22 @@ import { Router, route } from 'preact-router'
 import * as githubApi from '../lib/github-api'
 import initialState from './initialState'
 
-import Header from './header'
-import Home from '../routes/home'
-import Profile from '../routes/profile'
 import Search from './search'
 import ReposList from './reposList'
 import Filters from './filters'
 import Sorting from './sorting'
 import Dialog from './dialog'
-import Main from './main'
-
 import * as utils from '../lib/utils'
 
-// import Home from 'async!./home';
-// import Profile from 'async!./profile';
 
 export default class App extends Component {
-  state = initialState
+  state = {...initialState}
 
   handleRoute = e => {
     console.log('handleRoute')
     if (!this.state.query && e.url !== '/') {
       const matches = e.current.attributes.matches
-      const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics } = matches
+      const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics} = matches
 
       const sortingObj = {
         sortingField: sort,
@@ -34,121 +27,60 @@ export default class App extends Component {
       }
 
       const filterObj = {
-            hasOpenIssues: matches.hasOwnProperty('has_open_issues'),
-            hasTopics: matches.hasOwnProperty('has_topics'),
-            starredGTXTimes: matches.hasOwnProperty('starred_gt') ? starred_gt : 0,
-            updatedAfter: (updated_after && updated_after.replace(/_/g, '-')) ||
-            '2000-01-01',
-            type: type || 'all',
-            lang: language || 'Any',
+        hasOpenIssues: matches.hasOwnProperty('has_open_issues'),
+        hasTopics: matches.hasOwnProperty('has_topics'),
+        starredGTXTimes: matches.hasOwnProperty('starred_gt') ? starred_gt : 0,
+        updatedAfter: (updated_after && updated_after.replace(/_/g, '-')) ||
+        '2000-01-01',
+        type: type || 'all',
+        lang: language || 'Any',
       }
 
       const page = 1
-      githubApi.searchRepositories(user, page)
-        .then(data => {
-          const languages = data.reduce((acc, item) => {
-            if (item.language === null || acc.includes(item.language)) {return acc}
-            return acc.concat(item.language)
-          }, []).sort(utils.sortingAlg)
+      githubApi.searchRepositories(user, page).then(data => {
+        const languages = data.reduce((acc, item) => {
+          if (item.language === null ||
+            acc.includes(item.language)) {return acc}
+          return acc.concat(item.language)
+        }, []).sort(utils.sortingAlg)
 
-          const URLWithoutPage = e.url.replace(/.page=\d+/g,'')
-          history.replaceState({filterObj, sortingObj,}, 'Mini github client', URLWithoutPage)
+        const URLWithoutPage = e.url.replace(/.page=\d+/g, '')
+        history.replaceState({filterObj, sortingObj,}, 'Mini github client',
+          URLWithoutPage)
 
-          this.setState({
-            ...initialState,
-              query: user,
-              data: data,
-              languages: ['Any', ...languages],
-              allPagesLoaded: data.length < 30,
-              page,
-              filterObj,
-              sortingObj
-            })
+        this.setState({
+          ...initialState,
+          query: user,
+          data: data,
+          languages: ['Any', ...languages],
+          allPagesLoaded: data.length < 30,
+          page,
+          filterObj,
+          sortingObj,
         })
-        .catch(err => console.log(err))
+      }).catch(err => console.log(err))
     }
   }
 
-
-  componentWillUpdate() {
+  componentWillUpdate () {
     console.log('componentWillUpdate')
   }
 
-  componentDidUpdate() {
+  componentDidUpdate () {
     const {query, sortingObj, filterObj, updateRoute, page} = this.state
-    const newRoute =  utils.getFullRoute(query, sortingObj, filterObj, page)
+    const newRoute = utils.getFullRoute(query, sortingObj, filterObj, page)
     if (newRoute !== this.currentRoute && updateRoute) {
-      console.log('pushing new route')
+      console.log('pushing new route', newRoute, updateRoute)
       this.currentRoute = newRoute
-      history.pushState({filterObj, sortingObj,}, 'Mini github client', newRoute)
+      history.pushState({filterObj, sortingObj,}, 'Mini github client',
+        newRoute)
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     window.addEventListener('popstate', e => {
       this.setState({...e.state, updateRoute: false})
     })
-  }
-
-
-  render ({}, {
-    data,
-    additionalData,
-    sorting,
-    languages,
-    selectedItemId,
-    languagesList,
-    query,
-    filterObj,
-    sortingObj,
-    allPagesLoaded,
-    }) {
-
-    console.log('render app', this.state)
-
-    const filterFunction = utils.filterFunction(filterObj)
-    const sortingFunction= utils.sortingFunction(sortingObj)
-    const filteredAndSortedData = data.filter(filterFunction).sort(sortingFunction)
-    if (data.length > 0 && filteredAndSortedData.length < 10 && !allPagesLoaded) {
-      this.handlerLoadMore()
-    }
-    const selectedItem = selectedItemId && additionalData[selectedItemId]
-
-    console.log('filtered data', filterFunction)
-    console.log('filtered data', filteredAndSortedData)
-
-
-    return (
-      <div id="app">
-        <Router onChange={this.handleRoute}>
-          <Search path="/:user?" handlerOnSearch={this.handlerOnSearch}/>
-        </Router>
-        <Main/>
-        { data.length &&
-          <div>
-            <Filters filterObj={filterObj}
-                     languages={languages}
-                     handlerOnFilter={this.handlerOnFilter}/>
-            <Sorting sortingObj={sortingObj}
-                     handlerOnSort={this.handlerOnSort}
-                     sorting={sorting}/>
-            <ReposList data={filteredAndSortedData}
-                       handlerOnOpenDialog={this.handlerOnOpenDialog}/>
-          </div>
-        }
-
-        { selectedItem &&
-          <Dialog dialogItem={selectedItem}/>
-        }
-
-        { data.length === 0 || data.length % 30
-          ? null
-          : <button onClick={this.handlerLoadMore}>Load more</button>
-        }
-
-        <Header />
-      </div>
-    )
   }
 
   handlerOnOpenDialog = selectedItemId => {
@@ -156,10 +88,12 @@ export default class App extends Component {
       return this.setState({selectedItemId})
     }
 
-    const selectedItem = this.state.data.find(item => item.id === selectedItemId)
-    const URLs = [selectedItem.languages_url,
-                  selectedItem.contributors_url,
-                  selectedItem.url + '/pulls?sort=popularity&per_page=5']
+    const selectedItem = this.state.data.find(
+      item => item.id === selectedItemId)
+    const URLs = [
+      selectedItem.languages_url,
+      selectedItem.contributors_url,
+      selectedItem.url + '/pulls?sort=popularity&per_page=5']
 
     if (selectedItem.fork) {
       URLs.push(selectedItem.url)
@@ -169,52 +103,49 @@ export default class App extends Component {
       return fetch(URL).then(res => res.json())
     })
 
-    Promise.all(promises)
-      .then(responses => {
+    Promise.all(promises).then(responses => {
         console.log('fromPromise', responses)
         const languages = responses[0]
 
         this.setState({
           selectedItemId,
-          additionalData: {...this.state.additionalData, [selectedItemId]: {
-            htmlUrl: selectedItem.html_url,
-            languages,
-            contributors: responses[1],
-            pulls: responses[2],
-            source: responses[3] ? responses[3].parent.html_url : ''
-          }}
+          additionalData: {
+            ...this.state.additionalData, [selectedItemId]: {
+              htmlUrl: selectedItem.html_url,
+              languages,
+              contributors: responses[1],
+              pulls: responses[2],
+              source: responses[3] ? responses[3].parent.html_url : '',
+            },
+          },
         })
-      }
-      )
-      .catch(err => console.log(err))
+      },
+    ).catch(err => console.log(err))
   }
 
   handlerOnSearch = query => {
     console.log('searching new data')
     const page = 1
-    githubApi.searchRepositories(query, page)
-      .then(data => {
-        const languages = data
-          .reduce((acc, item) => {
-            if (item.language === null || acc.includes(item.language)) {return acc}
-            return acc.concat(item.language)
-            }, [])
-          .sort(utils.sortingAlg)
+    githubApi.searchRepositories(query, page).then(data => {
+      const languages = data.reduce((acc, item) => {
+        if (item.language === null || acc.includes(item.language)) {return acc}
+        return acc.concat(item.language)
+      }, []).sort(utils.sortingAlg)
 
-        console.log(languages)
+      const newState = {
+        ...initialState,
+        ...{
+          query,
+          data: data,
+          languages: ['Any', ...languages],
+          page,
+          allPagesLoaded: data.length < 30,
+          updateRoute: true,
+        }
+      }
 
-        this.setState({
-          ...initialState,
-          ...{
-            query,
-            data: data,
-            languages: ['Any', ...languages],
-            page,
-            allPagesLoaded: data.length < 30,
-            updateRoute: true,
-          }})
-        })
-      .catch(err => console.log(err))
+      this.setState(newState)
+    }).catch(err => console.log(err))
   }
 
   handlerLoadMore = () => {
@@ -228,7 +159,10 @@ export default class App extends Component {
 
       this.setState({
         data: [...this.state.data, ...data],
-        languages: ['Any', ...Array.from(new Set([...this.state.languages.slice(1), ...languages])).sort(utils.sortingAlg)],
+        languages: ['Any',
+          ...Array.from(
+            new Set([...this.state.languages.slice(1), ...languages])).
+            sort(utils.sortingAlg)],
         page,
         allPagesLoaded: data.length < 30,
         updateRoute: true,
@@ -250,7 +184,68 @@ export default class App extends Component {
     })
   }
 
-}
+  render ({}, {
+    data,
+    additionalData,
+    sorting,
+    languages,
+    selectedItemId,
+    languagesList,
+    query,
+    filterObj,
+    sortingObj,
+    allPagesLoaded,
+  }) {
 
-// TODO add pagination to URL
-// TODO add error handling if there are no user
+    console.log('render app', this.state)
+
+    const filterFunction = utils.filterFunction(filterObj)
+    const sortingFunction = utils.sortingFunction(sortingObj)
+    const filteredAndSortedData = data.filter(filterFunction).
+      sort(sortingFunction)
+    if (data.length > 0 && filteredAndSortedData.length < 10 &&
+      !allPagesLoaded) {
+      this.handlerLoadMore()
+    }
+    const selectedItem = selectedItemId && additionalData[selectedItemId]
+
+    return (
+      <div id="app">
+        { query && data.length
+          ? <h1>{query}</h1>
+          : null
+        }
+        { query && !data.length &&
+        <h1>{`No user with name ${query} is found`}</h1>
+        }
+        <Router onChange={this.handleRoute}>
+          <Search path="/:user?" handlerOnSearch={this.handlerOnSearch}/>
+        </Router>
+        { data.length
+          ? <div>
+            <Filters filterObj={filterObj}
+                     languages={languages}
+                     handlerOnFilter={this.handlerOnFilter}/>
+            <Sorting sortingObj={sortingObj}
+                     handlerOnSort={this.handlerOnSort}
+                     sorting={sorting}/>
+            <ReposList data={filteredAndSortedData}
+                       handlerOnOpenDialog={this.handlerOnOpenDialog}/>
+          </div>
+          : null
+        }
+
+        { selectedItem &&
+        <Dialog dialogItem={selectedItem}/>
+        }
+
+        { data.length === 0 || data.length % 30
+          ? null
+          : <button onClick={this.handlerLoadMore}>Load more</button>
+        }
+
+      </div>
+    )
+  }
+
+}

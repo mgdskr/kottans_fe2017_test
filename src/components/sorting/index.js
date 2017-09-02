@@ -1,6 +1,6 @@
 import { h, Component } from 'preact'
 import style from './style'
-import sortingTypes, { sortingOptions } from './sorting'
+import { sortingOptions } from './sorting'
 
 export default class Sorting extends Component {
 

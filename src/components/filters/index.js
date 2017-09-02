@@ -29,7 +29,6 @@ export default class Filters extends Component {
   }
 
   render ({filterObj ,languages}) {
-    console.log(filterObj.hasOpenIssues)
     return (
       <div >
         <div>
@@ -79,7 +78,6 @@ export default class Filters extends Component {
         <div>
           Language
           {languages.map(language => {
-            console.log(language, filterObj.lang, language === filterObj.lang)
             return (<div key={language}>
               <label htmlFor={language}>{language}</label>
               <input id={language}
@@ -87,7 +85,7 @@ export default class Filters extends Component {
                      name="lang"
                      value={language}
                      onChange={this.handlerOnFilterBy}
-                     defaultChecked={language === filterObj.lang}/>
+                     checked={language === filterObj.lang}/>
             </div>)
           })}
         </div>
