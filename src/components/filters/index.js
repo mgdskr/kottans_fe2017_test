@@ -31,39 +31,44 @@ export default class Filters extends Component {
   render ({filterObj ,languages}) {
     return (
       <div >
-        <div>
-          <label htmlFor="hasOpenIssues">Has open issues</label>
+        <div class={style.filter}>
           <input id="hasOpenIssues"
                  type="checkbox"
                  checked={filterObj.hasOpenIssues}
                  onChange={this.handlerOnFilterBy}/>
-        </div>
+          <label class={style.checkbox}
+                 htmlFor="hasOpenIssues">
+            Has open issues
+          </label>
 
-        <div>
-          <label htmlFor="hasTopics">Has topics</label>
           <input id="hasTopics"
                  type="checkbox"
                  checked={filterObj.hasTopics}
                  onChange={this.handlerOnFilterBy}/>
+          <label class={style.checkbox}
+                 htmlFor="hasTopics">
+            Has topics
+          </label>
         </div>
 
-        <div>
+        <div class={style.filter}>
           <label htmlFor="starred">Starred more than X times</label>
           <input id="starred"
                  type="number"
                  value={filterObj.starredGTXTimes}
                  onInput={this.handlerOnFilterBy}/>
         </div>
-        <div>
+
+        <div class={style.filter}>
           <label htmlFor="updatedAfter">Updated after</label>
           <input id="updatedAfter"
                  type="date"
                  value={filterObj.updatedAfter}
                  onChange={this.handlerOnFilterBy}/>
         </div>
-        <div>
-          Type
-          <select id="type" size="1"onChange={this.handlerOnFilterBy}>
+        <div class={style.filter}>
+          <label htmlFor="type">Type</label>
+          <select id="type" name="type" size="1"onChange={this.handlerOnFilterBy}>
             {['All', 'Fork', 'Source'].map(type =>
                 <option value={type}
                         selected={type.toLowerCase() === filterObj.type}>
@@ -73,9 +78,10 @@ export default class Filters extends Component {
             }
           </select>
         </div>
-        <div>
-          Languages
-          <select id="language" size="1" onChange={this.handlerOnFilterBy}>
+
+        <div class={style.filter}>
+          <label htmlFor="language">Languages</label>
+          <select name="language" id="language" size="1" onChange={this.handlerOnFilterBy}>
             {languages.map(language =>
                 <option value={language}
                         selected={language === filterObj.lang}>

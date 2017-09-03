@@ -13,9 +13,9 @@ export default class Sorting extends Component {
   render ({sortingObj, handlerOnSort}) {
     console.log()
     return (
-      <div>
-        Sort options
-        <select size="1" name="sorting" onChange={this.handlerOnSort}>
+      <div class={style.sort}>
+        <label htmlFor="sorting">Sort options</label>
+        <select size="1" id="sorting" name="sorting" onChange={this.handlerOnSort}>
           {Object.keys(sortingOptions).
             map(key =>
               <option value={key}
