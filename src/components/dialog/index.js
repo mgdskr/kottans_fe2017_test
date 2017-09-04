@@ -5,17 +5,18 @@ import style from './style'
 
 export default class Dialog extends Component {
 
-  componentDidMount() {
+  componentDidUpdate() {
+    if (!this.props.dialogItem.languages.length) {return}
+
     const $piechart = document.querySelector('.piechart')
     const ctx = $piechart.getContext('2d')
-    // const shares = [50, 30, 15, 5]
-    // const colors = ['red', 'green', 'blue', 'yellow', 'black']
     const initialShift = 1.5 * Math.PI
     let shift = initialShift
     const centerX = 100
     const centerY = 75
-    Object.keys(this.languagesInPercent).forEach((language, id) => {
-        const share = this.languagesInPercent[language]
+    const languagesInPercent = getLanguagesShares(this.props.dialogItem.languages)
+    Object.keys(languagesInPercent).forEach((language, id) => {
+        const share = languagesInPercent[language]
         console.log('language share', language, share)
         const angle = share / 100 * 2 * Math.PI + shift
         ctx.beginPath()
@@ -32,20 +33,21 @@ export default class Dialog extends Component {
 
   render ({dialogItem}) {
     const {fullName, htmlUrl, sourceUrl, sourceName, contributors, languages, pulls} = dialogItem
-    this.languagesInPercent = getLanguagesShares(languages)
+    const languagesInPercent = getLanguagesShares(languages)
 
     return (
       <div>
         <a href={htmlUrl}>{fullName}</a>
 
-        {this.languagesInPercent
+        {languagesInPercent
           ? <canvas className="piechart"></canvas>
           : null
         }
 
-        {this.languagesInPercent
-          ? <ul>{Object.keys(this.languagesInPercent).
-            map(language =>
+        {languagesInPercent
+          ? <ul>
+            {Object.keys(languagesInPercent)
+            .map(language =>
               <li>
                 <i class={style.languageIcon}
                    style={{
@@ -54,7 +56,7 @@ export default class Dialog extends Component {
                        : '#586069'
                    }}></i>
                 {language}
-                <span>{this.languagesInPercent[language].toFixed(1)}%</span>
+                <span>{languagesInPercent[language].toFixed(1)}%</span>
               </li>)}
             </ul>
           : null

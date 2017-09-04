@@ -19,6 +19,7 @@ const initialState = {
   page: 0,
   allPagesLoaded: false,
   updateRoute: true,
+  spinnerVisible: false,
 }
 
 export default initialState

@@ -20,6 +20,9 @@ export default class App extends Component {
   handleRoute = e => {
     console.log('handleRoute')
     if (!this.state.query && e.url !== '/') {
+      this.setState({spinnerVisible: true})
+
+
       const matches = e.current.attributes.matches
       const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics} = matches
 
@@ -60,6 +63,7 @@ export default class App extends Component {
           page,
           filterObj,
           sortingObj,
+          spinnerVisible: false,
         })
       }).catch(err => console.log(err))
     }
@@ -90,6 +94,7 @@ export default class App extends Component {
     if (this.state.additionalData[selectedItemId]) {
       return this.setState({selectedItemId})
     }
+    this.setState({spinnerVisible: true})
 
     const selectedItem = this.state.data.find(
       item => item.id === selectedItemId)
@@ -123,6 +128,7 @@ export default class App extends Component {
               sourceName: responses[3] ? responses[3].parent.full_name : '',
             },
           },
+          spinnerVisible: false,
         })
       },
     ).catch(err => console.log(err))
@@ -130,6 +136,7 @@ export default class App extends Component {
 
   handlerOnSearch = query => {
     console.log('searching new data')
+    this.setState({spinnerVisible: true})
     const page = 1
     githubApi.searchRepositories(query, page).then(data => {
       const languages = data.reduce((acc, item) => {
@@ -146,7 +153,8 @@ export default class App extends Component {
           page,
           allPagesLoaded: data.length < 30,
           updateRoute: true,
-        }
+          spinnerVisible: false,
+        },
       }
 
       this.setState(newState)
@@ -154,6 +162,7 @@ export default class App extends Component {
   }
 
   handlerLoadMore = () => {
+    this.setState({spinnerVisible: true})
     const page = this.state.page + 1
 
     githubApi.searchRepositories(this.state.query, page).then(data => {
@@ -171,6 +180,7 @@ export default class App extends Component {
         page,
         allPagesLoaded: data.length < 30,
         updateRoute: true,
+        spinnerVisible: false,
       })
     }).catch(err => console.log(err))
   }
@@ -200,6 +210,7 @@ export default class App extends Component {
     filterObj,
     sortingObj,
     allPagesLoaded,
+    spinnerVisible
   }) {
 
     console.log('render app', this.state)
@@ -252,7 +263,7 @@ export default class App extends Component {
         <Dialog dialogItem={selectedItem}/>
         }
 
-        <Spinner/>
+        { spinnerVisible && <Spinner/>}
 
       </div>
     )
