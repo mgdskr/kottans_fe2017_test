@@ -237,7 +237,7 @@ export default class App extends Component {
                            handlerOnOpenDialog={this.handlerOnOpenDialog}/>
                 { data.length === 0 || data.length % 30
                   ? null
-                  : <button onClick={this.handlerLoadMore}>Load more</button>
+                  : <button type="button" class={style.loadMore} onClick={this.handlerLoadMore}>Load more</button>
                 }
               </div>
             : null

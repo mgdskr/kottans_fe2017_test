@@ -13,19 +13,21 @@ export default class Sorting extends Component {
   render ({sortingObj, handlerOnSort}) {
     console.log()
     return (
-      <div class={style.sort}>
-        <label htmlFor="sorting">Sort options</label>
-        <select size="1" id="sorting" name="sorting" onChange={this.handlerOnSort}>
-          {Object.keys(sortingOptions).
-            map(key =>
-              <option value={key}
-                      selected={sortingOptions[key].sortingField === sortingObj.sortingField &&
-                                sortingOptions[key].sortingOrder === sortingObj.sortingOrder}>
-                {sortingOptions[key].title}
-              </option>
-            )
-          }
-        </select>
+      <div class={style.sortingContainer}>
+        <div class={style.sort}>
+          <label htmlFor="sorting">Sort</label>
+          <select size="1" id="sorting" name="sorting" onChange={this.handlerOnSort}>
+            {Object.keys(sortingOptions).
+              map(key =>
+                <option value={key}
+                        selected={sortingOptions[key].sortingField === sortingObj.sortingField &&
+                                  sortingOptions[key].sortingOrder === sortingObj.sortingOrder}>
+                  {sortingOptions[key].title}
+                </option>
+              )
+            }
+          </select>
+        </div>
       </div>
     )
   }

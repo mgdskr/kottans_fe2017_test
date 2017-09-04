@@ -30,29 +30,28 @@ export default class Filters extends Component {
 
   render ({filterObj ,languages}) {
     return (
-      <div >
-        <div class={style.filter}>
-          <input id="hasOpenIssues"
-                 type="checkbox"
-                 checked={filterObj.hasOpenIssues}
-                 onChange={this.handlerOnFilterBy}/>
-          <label class={style.checkbox}
-                 htmlFor="hasOpenIssues">
-            Has open issues
-          </label>
+      <div class={style.filtersContainer}>
 
-          <input id="hasTopics"
-                 type="checkbox"
-                 checked={filterObj.hasTopics}
-                 onChange={this.handlerOnFilterBy}/>
-          <label class={style.checkbox}
-                 htmlFor="hasTopics">
-            Has topics
-          </label>
-        </div>
+        <input id="hasOpenIssues"
+               type="checkbox"
+               checked={filterObj.hasOpenIssues}
+               onChange={this.handlerOnFilterBy}/>
+        <label class={style.checkbox}
+               htmlFor="hasOpenIssues">
+          Open issues
+        </label>
+
+        <input id="hasTopics"
+               type="checkbox"
+               checked={filterObj.hasTopics}
+               onChange={this.handlerOnFilterBy}/>
+        <label class={style.checkbox}
+               htmlFor="hasTopics">
+          Topics
+        </label>
 
         <div class={style.filter}>
-          <label htmlFor="starred">Starred more than X times</label>
+          <label htmlFor="starred">Stars</label>
           <input id="starred"
                  type="number"
                  value={filterObj.starredGTXTimes}
@@ -60,13 +59,13 @@ export default class Filters extends Component {
         </div>
 
         <div class={style.filter}>
-          <label htmlFor="updatedAfter">Updated after</label>
+          <label htmlFor="updatedAfter">Updated</label>
           <input id="updatedAfter"
                  type="date"
                  value={filterObj.updatedAfter}
                  onChange={this.handlerOnFilterBy}/>
         </div>
-        <div class={style.filter}>
+        <div class={style.filterSelect}>
           <label htmlFor="type">Type</label>
           <select id="type" name="type" size="1"onChange={this.handlerOnFilterBy}>
             {['All', 'Fork', 'Source'].map(type =>
@@ -79,8 +78,8 @@ export default class Filters extends Component {
           </select>
         </div>
 
-        <div class={style.filter}>
-          <label htmlFor="language">Languages</label>
+        <div class={style.filterSelect}>
+          <label htmlFor="language">Language</label>
           <select name="language" id="language" size="1" onChange={this.handlerOnFilterBy}>
             {languages.map(language =>
                 <option value={language}

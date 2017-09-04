@@ -9,14 +9,40 @@ input[type="checkbox"] + label, label {
     padding: 6px;
     display: inline-block;
     box-sizing: border-box;
-    flex-grow: 1;
+    flex-grow: 0;
     flex-shrink: 0;
 }
 
 .sort {
-    width: 480px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    margin-bottom: 5px;
+}
+
+.sort > label {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 0;
+}
+
+.sort::after {
+    content: '\25BC';
+    position: relative;
+    top: 7px;
+    right: 20px;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    pointer-events: none;
+}
+
+.sortingContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    border-bottom: 1px #e1e4e8 solid;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }

@@ -3,19 +3,24 @@ input[type="checkbox"] + label, label {
     background-color: #eff3f6;
     background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
     border: 1px solid rgba(27, 31, 35, 0.2);
-    border-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
     white-space: nowrap;
     cursor: pointer;
-    padding: 6px;
-    display: inline-block;
     box-sizing: border-box;
-    flex-grow: 1;
     flex-shrink: 0;
     font-weight: 600;
-    margin-right: 5px;
+    font-size: 16px;
+    line-height: 1;
+    flex-grow: 0;
 }
 
-label {
+input[type="checkbox"] {
+    margin: 0;
+    padding: 0;
+}
+
+.filter > label, .filterSelect > label {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     margin-right: 0;
@@ -50,22 +55,34 @@ input[type="number"], input[type="date"] {
     border: 1px solid rgba(27, 31, 35, 0.2);
     border-left: none;
     font-size: 16px;
-    flex-grow: 1;
+    flex-grow: 0;
     flex-shrink: 0;
     width: 75px;
+    flex-shrink: 0;
 }
 
 input[type="date"] {
     padding: 3.25px;
-    width: 130px;
+    width: 155px;
+    flex-grow: 1;
+}
+
+
+.filtersContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-bottom: 1px #e1e4e8 solid;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .filter {
-    width: 480px;
+    /*width: 300px;*/
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    margin-bottom: 5px;
+    justify-content: flex-start;
 }
 
 /* Reset Select */
@@ -80,39 +97,44 @@ select {
     background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
     position: relative;
     display: inline-block;
-    width: 20em;
+    /*width: 20em;*/
     /*height: 30px;*/
     overflow: hidden;
     border-radius: 0 3px 3px 0;
     margin: 0;
-    padding: 6px;
+    padding: 6px 26px 6px 6px;
     color: #000;
     cursor: pointer;
     border: 1px solid rgba(27, 31, 35, 0.2);
     border-left: none;
-    font-size: 16px;
+    font-size: 14px;
 
 }
 select::-ms-expand {
     display: none;
 }
 /* Arrow */
-select::after {
+
+.filterSelect {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.filterSelect::after {
     content: '\25BC';
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    padding: 0 1em;
-    background: #34495e;
+    top: 7px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
     pointer-events: none;
 }
-/* Transition */
-select:hover::after {
-    color: #f39c12;
-}
-select::after {
-    -webkit-transition: .25s all ease;
-    -o-transition: .25s all ease;
-    transition: .25s all ease;
+
+.filterSelect :hover {
+    color: #24292e;
+    background-color: #e6ebf1;
+    background-image: linear-gradient(-180deg, #f0f3f6 0%, #e6ebf1 90%);
 }
