@@ -1,3 +1,103 @@
+.dialogContainer {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dialogContainer ul, .dialogContainer li {
+    list-style: none;
+    margin: 0;
+}
+
+.dialog {
+    background-color: #fff;
+    min-width: 480px;
+    max-width: 960px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+}
+
+.dialogClose {
+    cursor: pointer;
+    font-size: 32px;
+    font-weight: 600;
+    color: #24292e;
+    align-self: flex-end;
+}
+
+.dialogTitle{
+    text-decoration: none;
+}
+.dialogTitle:hover {
+    text-decoration: underline;
+}
+
+.dialogTitle > h3{
+    font-size: 26px;
+    line-height: 1;
+    margin: 12px 0;
+    color: #0366d6;
+    font-weight: 600;
+}
+
+.dialogSource {
+    color: #586069;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.dialogSourceLink {
+    text-decoration: none;
+    color: #586069;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 6px;
+}
+
+.dialogSourceLink:hover {
+    text-decoration: underline;
+    color: #0366d6;
+}
+
+.languagesContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.languagesList {
+    padding-top: 25px;
+    padding-right: 25px;
+
+}
+
+.language {
+    color: #586069;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.languageShare {
+    margin-left: 6px;
+
+}
+
 .languageIcon {
     position: relative;
     top: 1px;
@@ -8,4 +108,76 @@
     content: '';
     display: inline-block;
     margin-right: 3px;
+}
+
+.contributorsList {
+    padding: 0 20px 0 0;
+    margin: 0;
+
+}
+
+.contributor {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.contributorLink {
+    text-decoration: none;
+    color: #0366d6;
+    font-size: 20px;
+}
+
+.contributorLink:hover {
+    text-decoration: underline;
+}
+
+.contributorAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+.contributions {
+    color: #586069;
+    font-size: 12px;
+}
+
+.contributorDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.repoDetails {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.pullsContainer {
+
+}
+
+.pullsList {
+    padding: 0;
+    margin: 0;
+
+}
+
+.pullItem {
+
+}
+
+.pullItemLink {
+    text-decoration: none;
+    color: #586069;
+    font-size: 18px;
+}
+
+.pullItemLink:hover {
+    text-decoration: underline;
+    color: #0366d6;
 }

@@ -114,6 +114,9 @@ export default class App extends Component {
     Promise.all(promises).then(responses => {
         console.log('fromPromise', responses)
         const languages = responses[0]
+        const contributors = responses[1].sort((a,b) => b.contributions - a.contributions).slice(0,3)
+        console.log('contributors', contributors)
+
 
         this.setState({
           selectedItemId,
@@ -122,7 +125,8 @@ export default class App extends Component {
               fullName: selectedItem.full_name,
               htmlUrl: selectedItem.html_url,
               languages,
-              contributors: responses[1].sort((a,b) => - a.contibutions + b.contibutions).slice(0,3),
+              contributors,
+              // contributors: responses[1].sort((a,b) => - a.contibutions + b.contibutions).slice(0,3),
               pulls: responses[2],
               sourceUrl: responses[3] ? responses[3].parent.html_url : '',
               sourceName: responses[3] ? responses[3].parent.full_name : '',
@@ -199,6 +203,10 @@ export default class App extends Component {
     })
   }
 
+  handlerOnCloseDialog = () => {
+    this.setState({selectedItemId: null})
+  }
+
   render ({}, {
     data,
     additionalData,
@@ -259,8 +267,9 @@ export default class App extends Component {
           }
         </main>
 
-        { selectedItem &&
-        <Dialog dialogItem={selectedItem}/>
+        { selectedItemId &&
+        <Dialog dialogItem={selectedItem}
+                handlerOnCloseDialog={this.handlerOnCloseDialog}/>
         }
 
         { spinnerVisible && <Spinner/>}

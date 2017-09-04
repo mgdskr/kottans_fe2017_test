@@ -14,8 +14,13 @@ h3 {
 
 .repo {
     border-bottom: 1px #e1e4e8 solid;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.repo:hover {
+    box-shadow: 0 3px 3px #777;
 }
 
 .repoForked, .repoStars, .repoUpdatedAt, .repoLanguage {
