@@ -63,4 +63,26 @@ const getFullRoute = (query, sortingObj, filterObj, page) => {
   return fullRoute.replace(/\?&/,'?')
 }
 
-export { sortingFunction, filterFunction, getFilterRoute, getSortingRoute, getFullRoute, sortingAlg }
+const getLanguagesShares = languages => {
+  const languagesTotalSum = Object.keys(languages)
+  .reduce((acc, lang) => acc += languages[lang], 0)
+  const otherLanguagesSum = Object.keys(languages)
+  .reduce((acc, lang) => acc += languages[lang] < 1024 ? languages[lang] : 0, 0)
+  const languagesInPercent = {}
+  Object.keys(languages).forEach(lang => {
+    if (languages[lang] >= 1024) {
+      const languageShare = languages[lang] / languagesTotalSum * 100
+      if (languageShare > 0) {
+        languagesInPercent[lang] = languageShare
+      }
+    }
+  })
+
+  if (otherLanguagesSum > 0) {
+    languagesInPercent.Others = otherLanguagesSum / languagesTotalSum * 100
+  }
+  return languagesInPercent
+}
+
+
+export { sortingFunction, filterFunction, getFilterRoute, getSortingRoute, getFullRoute, sortingAlg, getLanguagesShares }

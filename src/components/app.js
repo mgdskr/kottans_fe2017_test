@@ -9,6 +9,7 @@ import ReposList from './reposList'
 import Filters from './filters'
 import Sorting from './sorting'
 import Dialog from './dialog'
+import Spinner from './spinner'
 import * as utils from '../lib/utils'
 
 import style from './style.css'
@@ -39,6 +40,7 @@ export default class App extends Component {
 
       const page = 1
       githubApi.searchRepositories(user, page).then(data => {
+        if (!data.length) {throw 'no data'}
         const languages = data.reduce((acc, item) => {
           if (item.language === null ||
             acc.includes(item.language)) {return acc}
@@ -112,11 +114,13 @@ export default class App extends Component {
           selectedItemId,
           additionalData: {
             ...this.state.additionalData, [selectedItemId]: {
+              fullName: selectedItem.full_name,
               htmlUrl: selectedItem.html_url,
               languages,
-              contributors: responses[1],
+              contributors: responses[1].sort((a,b) => - a.contibutions + b.contibutions).slice(0,3),
               pulls: responses[2],
-              source: responses[3] ? responses[3].parent.html_url : '',
+              sourceUrl: responses[3] ? responses[3].parent.html_url : '',
+              sourceName: responses[3] ? responses[3].parent.full_name : '',
             },
           },
         })
@@ -226,7 +230,7 @@ export default class App extends Component {
           }
 
           { data.length
-            ? <div>
+            ? <div class={style.content}>
                 <Filters filterObj={filterObj}
                          languages={languages}
                          handlerOnFilter={this.handlerOnFilter}/>
@@ -247,6 +251,8 @@ export default class App extends Component {
         { selectedItem &&
         <Dialog dialogItem={selectedItem}/>
         }
+
+        <Spinner/>
 
       </div>
     )

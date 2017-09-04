@@ -11,13 +11,28 @@ h1 {
 }
 
 .innerContainer {
-    width: 960px;
+    min-width: 480px;
+    max-width: 960px;
+    width: 100%;
     margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    /*flex-wrap: wrap;*/
     padding-right: 12px;
     padding-left: 12px;
+}
+
+@media screen and (max-width: 768px) {
+    .innerContainer {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    form {
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
 }
 
 form {

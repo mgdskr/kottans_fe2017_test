@@ -1,6 +1,6 @@
 import { h, Component } from 'preact'
 import style from './style'
-import languageColors from './language-colors'
+import languageColors from '../../lib/language-colors'
 
 export default class Repo extends Component {
 
@@ -15,7 +15,7 @@ export default class Repo extends Component {
         : '#586069'
     }
 
-    const stars = item.stargazers_count && item.stargazers_count < 1000
+    const stars = item.stargazers_count < 1000
       ? item.stargazers_count
       : (item.stargazers_count / 1000).toFixed(1) + 'k'
 

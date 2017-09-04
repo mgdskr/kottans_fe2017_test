@@ -20,8 +20,10 @@ html, body {
 }
 
 main {
-	width: 960px;
+	max-width: 960px;
+	min-width: 480px;
 	margin: auto;
+	width: 100%;
 	padding-left: 12px;
 	padding-right: 12px;
 }
