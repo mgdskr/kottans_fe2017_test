@@ -1,26 +1,36 @@
 [link to app root](https://mgdskr.github.io/)
 
-За основу для проекта взял preact, без redux, позже пожалел об этом. По базовым требованиям сделал все, кажется ничего не упустил.
-* `master` should be hosted with [GitHub Pages](https://pages.github.com/)
-Вот это не понял, апп выложил на GitHub Pages
+_За основу для проекта взял preact, без redux, позже пожалел, что без redux, было бы немного чище. По базовым требованиям сделал все, кажется ничего не упустил._
 
-По бонусным
+* `master` should be hosted with [GitHub Pages](https://pages.github.com/)
+
+_Вот это не понял, апп выложил на GitHub Pages_
+
+_По бонусным_
 
 * progress indicator (for slow connections)
-есть спиннер
+
+_есть спиннер_
+
 * date can be entered in user-preferred locale or with datepicker
-дeфолтный дейтпикер
+
+_дeфолтный дейтпикер_
+
 * stars count is nicely rounded (5627 => 5.6k)
-done
+
+_done_
+
 * repos languages are hidden when filtering by language
-done
+
+_done_
+
 * submit button is pressed with "Enter" key
-done
+
+_done_
 
 ### Router
 
-Роутер есть
-только в сортировке явно указан порядок и asc и desc, а не только desc
+_Роутер есть только в сортировке явно указан порядок и asc и desc, а не только desc_
 
 2. sorting was enabled
 
@@ -32,20 +42,29 @@ done
 
 
 * router ignores opening link in a new tab (with keyboard or context menu)
-нет
+
+_нет_
+
 * application state is restored after reloading
-у меня все работало, а как выложил так сразу перестало
+
+_у меня все работало, а как выложил так сразу перестало_
+
 * history navigation is sensible
-да
+
+_да_
+
 * [History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) is used
-да
+
+_да_
 
 ### Performance
 
 * total app size (HTML + CSS + JS) <= 14Kb (including dependencies, minified & gzipped)
-собственно преакт был выбран ради этой цели, но в итоге 49.3Kb
+
+_собственно преакт был выбран ради этой цели, но в итоге 49.3Kb_
 
 * the app is served over `https://`
-github pages отдает `https://`, но для этого ничего не нужно делать, или я скорее всего не понял задание
+
+_github pages отдает `https://`, но для этого ничего не нужно делать, или я скорее всего не понял задание_
 
 
