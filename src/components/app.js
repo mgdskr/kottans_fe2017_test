@@ -18,10 +18,8 @@ export default class App extends Component {
   state = {...initialState}
 
   handleRoute = e => {
-    console.log('handleRoute')
     if (!this.state.query && e.url !== '/') {
       this.setState({spinnerVisible: true})
-
 
       const matches = e.current.attributes.matches
       const {sort, order, has_open_issues, language, starred_gt, type, updated_after, user, has_topics} = matches
@@ -68,16 +66,10 @@ export default class App extends Component {
       }).catch(err => console.log(err))
     }
   }
-
-  componentWillUpdate () {
-    console.log('componentWillUpdate')
-  }
-
   componentDidUpdate () {
     const {query, sortingObj, filterObj, updateRoute, page} = this.state
     const newRoute = utils.getFullRoute(query, sortingObj, filterObj, page)
     if (newRoute !== this.currentRoute && updateRoute) {
-      console.log('pushing new route', newRoute, updateRoute)
       this.currentRoute = newRoute
       history.pushState({filterObj, sortingObj,}, 'Mini github client',
         newRoute)
@@ -112,11 +104,7 @@ export default class App extends Component {
     })
 
     Promise.all(promises).then(responses => {
-        console.log('fromPromise', responses)
-        const languages = responses[0]
-        const contributors = responses[1].sort((a,b) => b.contributions - a.contributions).slice(0,3)
-        console.log('contributors', contributors)
-
+        const contributors =
 
         this.setState({
           selectedItemId,
@@ -124,9 +112,8 @@ export default class App extends Component {
             ...this.state.additionalData, [selectedItemId]: {
               fullName: selectedItem.full_name,
               htmlUrl: selectedItem.html_url,
-              languages,
-              contributors,
-              // contributors: responses[1].sort((a,b) => - a.contibutions + b.contibutions).slice(0,3),
+              languages: responses[0],
+              contributors: responses[1].sort((a,b) => b.contributions - a.contributions).slice(0,3),
               pulls: responses[2],
               sourceUrl: responses[3] ? responses[3].parent.html_url : '',
               sourceName: responses[3] ? responses[3].parent.full_name : '',
@@ -139,9 +126,10 @@ export default class App extends Component {
   }
 
   handlerOnSearch = query => {
-    console.log('searching new data')
     this.setState({spinnerVisible: true})
+
     const page = 1
+
     githubApi.searchRepositories(query, page).then(data => {
       const languages = data.reduce((acc, item) => {
         if (item.language === null || acc.includes(item.language)) {return acc}
@@ -162,11 +150,13 @@ export default class App extends Component {
       }
 
       this.setState(newState)
-    }).catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
   }
 
   handlerLoadMore = () => {
     this.setState({spinnerVisible: true})
+
     const page = this.state.page + 1
 
     githubApi.searchRepositories(this.state.query, page).then(data => {
@@ -186,7 +176,8 @@ export default class App extends Component {
         updateRoute: true,
         spinnerVisible: false,
       })
-    }).catch(err => console.log(err))
+    })
+    .catch(err => console.log(err))
   }
 
   handlerOnFilter = filterObj => {
@@ -221,12 +212,12 @@ export default class App extends Component {
     spinnerVisible
   }) {
 
-    console.log('render app', this.state)
-
     const filterFunction = utils.filterFunction(filterObj)
     const sortingFunction = utils.sortingFunction(sortingObj)
     const filteredAndSortedData = data.filter(filterFunction).
       sort(sortingFunction)
+
+    //load more data if filtered results count less than 10
     if (data.length > 0 && filteredAndSortedData.length < 10 &&
       !allPagesLoaded) {
       this.handlerLoadMore()
@@ -239,13 +230,11 @@ export default class App extends Component {
           <Search path="/:user?" handlerOnSearch={this.handlerOnSearch}/>
         </Router>
         <main>
-          { query && data.length
+          { query
+            ? data.length
               ? <h1>{query}</h1>
-              : null
-          }
-
-          { query && !data.length &&
-              <h1>{`No user with name ${query} is found`}</h1>
+              : <h1>{`No user with name ${query} is found`}</h1>
+            : null
           }
 
           { data.length
@@ -265,11 +254,13 @@ export default class App extends Component {
               </div>
             : null
           }
+
         </main>
 
-        { selectedItemId &&
-        <Dialog dialogItem={selectedItem}
-                handlerOnCloseDialog={this.handlerOnCloseDialog}/>
+        { selectedItemId
+          ? <Dialog dialogItem={selectedItem}
+                    handlerOnCloseDialog={this.handlerOnCloseDialog}/>
+          : null
         }
 
         { spinnerVisible && <Spinner/>}
@@ -277,5 +268,4 @@ export default class App extends Component {
       </div>
     )
   }
-
 }

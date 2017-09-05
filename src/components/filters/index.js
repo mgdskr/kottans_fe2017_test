@@ -18,7 +18,6 @@ export default class Filters extends Component {
     } else if ($inputId === 'updatedAfter') {
       filterObj.updatedAfter = t.value
     } else if ($inputId === 'type') {
-      console.log('!!!!!!')
       filterObj.type = [].find.call(t.childNodes, option => option.selected).value.toLowerCase()
     } else if ($inputId === 'language') {
       filterObj.lang = [].find.call(t.childNodes, option => option.selected).value
