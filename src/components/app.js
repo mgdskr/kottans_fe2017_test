@@ -55,7 +55,7 @@ export default class App extends Component {
         this.setState({
           ...initialState,
           query: user,
-          data: data,
+          data,
           languages: ['Any', ...languages],
           allPagesLoaded: data.length < 30,
           page,
@@ -66,6 +66,7 @@ export default class App extends Component {
       }).catch(err => console.log(err))
     }
   }
+
   componentDidUpdate () {
     const {query, sortingObj, filterObj, updateRoute, page} = this.state
     const newRoute = utils.getFullRoute(query, sortingObj, filterObj, page)
@@ -83,10 +84,11 @@ export default class App extends Component {
   }
 
   handlerOnOpenDialog = selectedItemId => {
+    this.setState({spinnerVisible: true})
+
     if (this.state.additionalData[selectedItemId]) {
       return this.setState({selectedItemId})
     }
-    this.setState({spinnerVisible: true})
 
     const selectedItem = this.state.data.find(
       item => item.id === selectedItemId)
@@ -155,8 +157,6 @@ export default class App extends Component {
   }
 
   handlerLoadMore = () => {
-    this.setState({spinnerVisible: true})
-
     const page = this.state.page + 1
 
     githubApi.searchRepositories(this.state.query, page).then(data => {
@@ -245,7 +245,8 @@ export default class App extends Component {
                 <Sorting sortingObj={sortingObj}
                          handlerOnSort={this.handlerOnSort}
                          sorting={sorting}/>
-                <ReposList data={filteredAndSortedData} filterLang={filterObj.lang}
+                <ReposList data={filteredAndSortedData}
+                           filterLang={filterObj.lang}
                            handlerOnOpenDialog={this.handlerOnOpenDialog}/>
                 { data.length === 0 || data.length % 30
                   ? null
@@ -257,10 +258,8 @@ export default class App extends Component {
 
         </main>
 
-        { selectedItemId
-          ? <Dialog dialogItem={selectedItem}
-                    handlerOnCloseDialog={this.handlerOnCloseDialog}/>
-          : null
+        { selectedItemId && <Dialog dialogItem={selectedItem}
+                                    handlerOnCloseDialog={this.handlerOnCloseDialog}/>
         }
 
         { spinnerVisible && <Spinner/>}

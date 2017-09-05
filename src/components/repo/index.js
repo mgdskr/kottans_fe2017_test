@@ -38,7 +38,7 @@ export default class Repo extends Component {
             </span>
           : null}
         <time class={style.repoUpdatedAt} dateTime={item.updated_at}>Updated at: {item.updated_at.slice(0,10)}</time>
-        {item.language && (!filterLang || item.language !== filterLang)
+        {item.language && (!filterLang || filterLang !== item.language)
           ? <span class={style.repoLanguage}>
               <i class={style.repoLanguageIcon}
                   style={languageColor}></i>
