@@ -245,7 +245,7 @@ export default class App extends Component {
                 <Sorting sortingObj={sortingObj}
                          handlerOnSort={this.handlerOnSort}
                          sorting={sorting}/>
-                <ReposList data={filteredAndSortedData}
+                <ReposList data={filteredAndSortedData} filterLang={filterObj.lang}
                            handlerOnOpenDialog={this.handlerOnOpenDialog}/>
                 { data.length === 0 || data.length % 30
                   ? null

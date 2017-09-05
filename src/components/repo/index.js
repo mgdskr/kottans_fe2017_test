@@ -8,7 +8,7 @@ export default class Repo extends Component {
     this.props.handlerOnOpenDialog(itemId)
   }
 
-  render ({item}) {
+  render ({item, filterLang}) {
     const languageColor = {
       backgroundColor: item.language && languageColors[item.language]
         ? languageColors[item.language].color
@@ -38,7 +38,7 @@ export default class Repo extends Component {
             </span>
           : null}
         <time class={style.repoUpdatedAt} dateTime={item.updated_at}>Updated at: {item.updated_at.slice(0,10)}</time>
-        {item.language
+        {item.language && (!filterLang || item.language !== filterLang)
           ? <span class={style.repoLanguage}>
               <i class={style.repoLanguageIcon}
                   style={languageColor}></i>
