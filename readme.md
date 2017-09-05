@@ -1,6 +1,6 @@
 [link to app root](https://mgdskr.github.io/)
 
-_За основу для проекта взял preact, без redux, позже пожалел об этом. По базовым требованиям сделал все, кажется ничего не упустил._
+_За основу для проекта взял preact, без redux, позже пожалел, что без redux, было бы немного чище. По базовым требованиям сделал все, кажется ничего не упустил._
 
 * `master` should be hosted with [GitHub Pages](https://pages.github.com/)
 
