@@ -1536,10 +1536,11 @@ var App = function (_Component) {
         });
       }
     }, _this.handlerOnOpenDialog = function (selectedItemId) {
+      _this.setState({ spinnerVisible: true });
+
       if (_this.state.additionalData[selectedItemId]) {
         return _this.setState({ selectedItemId: selectedItemId });
       }
-      _this.setState({ spinnerVisible: true });
 
       var selectedItem = _this.state.data.find(function (item) {
         return item.id === selectedItemId;
@@ -1605,8 +1606,6 @@ var App = function (_Component) {
         return console.log(err);
       });
     }, _this.handlerLoadMore = function () {
-      _this.setState({ spinnerVisible: true });
-
       var page = _this.state.page + 1;
 
       __WEBPACK_IMPORTED_MODULE_2__lib_github_api__["a" /* searchRepositories */](_this.state.query, page).then(function (data) {
@@ -1720,7 +1719,8 @@ var App = function (_Component) {
           __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_7__sorting__["a" /* default */], { sortingObj: sortingObj,
             handlerOnSort: this.handlerOnSort,
             sorting: sorting }),
-          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_5__reposList__["a" /* default */], { data: filteredAndSortedData, filterLang: filterObj.lang,
+          __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_5__reposList__["a" /* default */], { data: filteredAndSortedData,
+            filterLang: filterObj.lang,
             handlerOnOpenDialog: this.handlerOnOpenDialog }),
           data.length === 0 || data.length % 30 ? null : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
             'button',
@@ -1729,8 +1729,8 @@ var App = function (_Component) {
           )
         ) : null
       ),
-      selectedItemId ? __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_8__dialog__["a" /* default */], { dialogItem: selectedItem,
-        handlerOnCloseDialog: this.handlerOnCloseDialog }) : null,
+      selectedItemId && __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(__WEBPACK_IMPORTED_MODULE_8__dialog__["a" /* default */], { dialogItem: selectedItem,
+        handlerOnCloseDialog: this.handlerOnCloseDialog }),
       spinnerVisible && _ref3
     );
   };
@@ -3028,7 +3028,7 @@ var Repo = function (_Component) {
         'Updated at: ',
         item.updated_at.slice(0, 10)
       ),
-      item.language && (!filterLang || item.language !== filterLang) ? __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
+      item.language && (!filterLang || filterLang !== item.language) ? __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])(
         'span',
         { 'class': __WEBPACK_IMPORTED_MODULE_1__style___default.a.repoLanguage },
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_preact__["h"])('i', { 'class': __WEBPACK_IMPORTED_MODULE_1__style___default.a.repoLanguageIcon,
